@@ -105,17 +105,14 @@
     <div id="seccionLogin" class="card card-custom p-4 login-box">
       <h5 class="fw-bold text-center mb-3 text-secondary"><i class="bi bi-shield-lock me-2"></i>Iniciar Sesión</h5>
       
-      <!-- Formulario apuntando directo al Apps Script mediante iframe oculto -->
-      <form id="formLogin" method="GET" action="https://script.google.com/macros/s/AKfycbyzFbeujQdkeRa9_NLTRW9FjJBxxYuHE2avOrmsbAjG7Ver3fpSqN7YrkMkM0zsG_4x7w/exec" target="iframeOculto" onsubmit="prepararEnvioLogin()">
-        <input type="hidden" name="accion" value="login">
-        
+      <form id="formLogin" onsubmit="ejecutarLogin(event)">
         <div class="mb-3">
           <label for="loginUser" class="form-label fw-semibold">ID / Código de Usuario:</label>
-          <input type="text" id="loginUser" name="usuario" class="form-control" placeholder="Ej: CARV-001" required>
+          <input type="text" id="loginUser" class="form-control" placeholder="Ej: CARV-001" required>
         </div>
         <div class="mb-3">
           <label for="loginClave" class="form-label fw-semibold">Cédula o RIF:</label>
-          <input type="text" id="loginClave" name="clave" class="form-control" placeholder="Ej: J-12345678-0" required>
+          <input type="text" id="loginClave" class="form-control" placeholder="Ej: J-12345678-0" required>
         </div>
 
         <div id="alertaLogin" class="alert alert-danger text-center small py-2 d-none" role="alert"></div>
@@ -126,8 +123,6 @@
           </button>
         </div>
       </form>
-      <!-- Iframe oculto para recibir la respuesta sin errores CORS -->
-      <iframe name="iframeOculto" id="iframeOculto" style="display:none;" onload="procesarRespuestaLogin()"></iframe>
     </div>
 
     <!-- SECCIÓN DE CONSULTAS -->
@@ -212,11 +207,10 @@
 
   </div>
 
-  <!-- JAVASCRIPT BLINDADO -->
+  <!-- JAVASCRIPT ROBUSTO CON JSONP -->
   <script>
     var BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzFbeujQdkeRa9_NLTRW9FjJBxxYuHE2avOrmsbAjG7Ver3fpSqN7YrkMkM0zsG_4x7w/exec";
     var usuarioAutenticado = "";
-    var intentoEnvio = false;
 
     window.onload = function() {
       var sesionGuardada = localStorage.getItem('usuario_tributario');
@@ -234,41 +228,51 @@
       }, 600);
     };
 
-    function prepararEnvioLogin() {
-      intentoEnvio = true;
+    function ejecutarLogin(e) {
+      e.preventDefault();
+      var user = document.getElementById('loginUser').value.trim();
+      var clave = document.getElementById('loginClave').value.trim();
+      if (!user || !clave) return;
+
       var btn = document.getElementById('btnIngresar');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verificando...';
       document.getElementById('alertaLogin').classList.add('d-none');
-    }
 
-    function procesarRespuestaLogin() {
-      if (!intentoEnvio) return;
-      
-      var btn = document.getElementById('btnIngresar');
-      btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
+      // Nombre de función callback única global para JSONP
+      var callbackName = 'callbackLogin_' + Date.now();
+      window[callbackName] = function(res) {
+        delete window[callbackName];
+        var scriptTag = document.getElementById(callbackName);
+        if (scriptTag) scriptTag.remove();
 
-      try {
-        var iframe = document.getElementById('iframeOculto');
-        var doc = iframe.contentDocument || iframe.contentWindow.document;
-        var textoRespuesta = doc.body.innerText;
-        
-        if (textoRespuesta) {
-          var res = JSON.parse(textoRespuesta);
-          if (res.exito) {
-            usuarioAutenticado = res.usuario;
-            localStorage.setItem('usuario_tributario', usuarioAutenticado);
-            mostrarPantallaConsulta();
-          } else {
-            var alerta = document.getElementById('alertaLogin');
-            alerta.textContent = res.mensaje || "Datos incorrectos.";
-            alerta.classList.remove('d-none');
-          }
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
+
+        if (res && res.exito) {
+          usuarioAutenticado = res.usuario;
+          localStorage.setItem('usuario_tributario', usuarioAutenticado);
+          mostrarPantallaConsulta();
+        } else {
+          var alerta = document.getElementById('alertaLogin');
+          alerta.textContent = (res && res.mensaje) ? res.mensaje : "Datos incorrectos.";
+          alerta.classList.remove('d-none');
         }
-      } catch (e) {
-        // Ignorar error de carga inicial del iframe vacío
-      }
+      };
+
+      var script = document.createElement('script');
+      script.id = callbackName;
+      script.src = BASE_SCRIPT_URL + "?accion=login&usuario=" + encodeURIComponent(user) + "&clave=" + encodeURIComponent(clave) + "&callback=" + callbackName;
+      script.onerror = function() {
+        delete window[callbackName];
+        script.remove();
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
+        var alerta = document.getElementById('alertaLogin');
+        alerta.textContent = "Error de conexión con el servidor.";
+        alerta.classList.remove('d-none');
+      };
+      document.body.appendChild(script);
     }
 
     function mostrarPantallaConsulta() {
@@ -286,7 +290,6 @@
       document.getElementById('seccionLogin').classList.remove('d-none');
       document.getElementById('loginUser').value = "";
       document.getElementById('loginClave').value = "";
-      intentoEnvio = false;
     }
 
     function realizarConsulta(e) {
@@ -299,29 +302,36 @@
       document.getElementById('alertaError').classList.add('d-none');
       document.getElementById('btnBuscar').disabled = true;
       
-      var urlFinal = BASE_SCRIPT_URL + "?accion=consultar&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
+      var callbackName = 'callbackConsulta_' + Date.now();
+      window[callbackName] = function(res) {
+        delete window[callbackName];
+        var scriptTag = document.getElementById(callbackName);
+        if (scriptTag) scriptTag.remove();
 
-      // Usar JSONP dinámico o petición segura para las consultas
-      fetch(urlFinal)
-        .then(response => response.json())
-        .then(res => {
-          document.getElementById('cargando').classList.add('d-none');
-          document.getElementById('btnBuscar').disabled = false;
-          mostrarResultados(res);
-        })
-        .catch(err => {
-          document.getElementById('cargando').classList.add('d-none');
-          document.getElementById('btnBuscar').disabled = false;
-          var elError = document.getElementById('alertaError');
-          elError.textContent = "Error al consultar los registros del servidor.";
-          elError.classList.remove('d-none');
-        });
+        document.getElementById('cargando').classList.add('d-none');
+        document.getElementById('btnBuscar').disabled = false;
+        mostrarResultados(res);
+      };
+
+      var script = document.createElement('script');
+      script.id = callbackName;
+      script.src = BASE_SCRIPT_URL + "?accion=consultar&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado) + "&callback=" + callbackName;
+      script.onerror = function() {
+        delete window[callbackName];
+        script.remove();
+        document.getElementById('cargando').classList.add('d-none');
+        document.getElementById('btnBuscar').disabled = false;
+        var elError = document.getElementById('alertaError');
+        elError.textContent = "Error al consultar los registros del servidor.";
+        elError.classList.remove('d-none');
+      };
+      document.body.appendChild(script);
     }
 
     function mostrarResultados(res) {
-      if (!res.exito) {
+      if (!res || !res.exito) {
         var elError = document.getElementById('alertaError');
-        elError.textContent = res.mensaje;
+        elError.textContent = (res && res.mensaje) ? res.mensaje : "Error al obtener los datos.";
         elError.classList.remove('d-none');
         return;
       }
@@ -362,7 +372,7 @@
     function imprimirReporte() {
       var tipoDoc = document.getElementById('tipoDoc').value;
       if (!tipoDoc || !usuarioAutenticado) return;
-      var urlImpresion = BASE_SCRIPT_URL + "?accion=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
+      var urlImpresion = BASE_SCRIPT_URL + "?modo=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
       window.open(urlImpresion, '_blank');
     }
   </script>
