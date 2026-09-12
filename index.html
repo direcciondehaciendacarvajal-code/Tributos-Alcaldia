@@ -37,10 +37,15 @@
       transition: opacity 0.4s ease, visibility 0.4s;
     }
 
+    /* CONTENEDOR DE LOGO POR CSS (A PRUEBA DE FALLOS) */
     .logo-institucional {
-      max-height: 100px;
-      width: auto;
-      object-fit: contain;
+      width: 120px;
+      height: 90px;
+      background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUTExMWFhUXGBUYGBcYGBUYGBoYFRUXFxUVFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIALYBDQMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAAIDBAYHAQj/xAA/EAABAwIEAwUEBgIDAAIDAAABAhEDBCESMUFRBiJhcTKBkbEHM0KhwdHwFCNi8UJykuHxghUkovEkM7LS/Hx9/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAKREBAAIBAwQABAcAAAAAAAAAAAECEQMSITJBEyIxUXGh0fBCYYGRFP/aAAwDAQACEQMRAD8A+QJ2q+XSkR9Bq9QoK78fE1w0NlBwKBSkE7BIA+vO1S6G8j2P8AwV9D0v4eU0xK38x1uAglkISggdCdrtu4p9q+e2XQ8Q7Jj6u3w+P5a8t/o27v0zU40aR0pBwN/hX0rO8N2y2kOIjNKbcQQoqKVAEA8pIHpWPQvg3T1Wb0l9iQo+8qWlWpC2tSgAEpHuAfvV4+mdcW1y5Xg0x1VbKxVpUAKJ7q+uX/wtUwy6W4kS3kR3VqClEFC0oQhIJAKR0P+9ZPDnwWv3p0mOxaNspOtlQcZKEpUp0pCgUn2/8VbfpT7XN6H1LbyY+gUleO31qYQf8AGtdhS3C0U6vY1rW1WpCkhQG3uPevpL/AIPm3V7vH22nJSm1oT2SpWpC8NkgK5V7VlfEPwiw+HW3y7d2m1uF1v7Z1oFC0pUASs7Efn/2rL9L1u+Odf1fT4cZStYc3Fv3NbfD3iS4iM42h3b1JUAW0/h9f8AearB3iO6S4EofbWnsDtdS6R7AEg/0rO9N9uL0bQnK/J/8Aa47/AMO//wC/5pX0B3w8z2VqLcuMslClJS7i8Srqe232r9Fj9d6O23T6VxfJ70k37a0G1a4J4lU0N0F/L61m718WSIqXFPRuQpZ5AASfnv0rz6N8T2Vtr82I8lC1gNpW2pKlnvj32/vXn7l+b1tX+nKj9G3P5s/81w8vX74q33wI+8uLSlA8wK08v6967i+ImK6gL9m+lSjslbB2r5Vb8b211hL6Y7q2VEpSpKNiqj25+m6V7G66b036V6r036VvT//Z');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0 auto;
     }
 
     .card-custom {
@@ -84,7 +89,7 @@
   <!-- PANTALLA DE CARGA CON LOGO -->
   <div id="splashScreen">
     <div class="mb-2 text-center">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUTExMWFhUXGBUYGBcYGBUYGBoYFRUXFxUVFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIALYBDQMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAAIDBAYHAQj/xAA/EAABAwIEAwUEBgIDAAIDAAABAhEDBCESMUFRBiJhcTKBkbEHM0KhwdHwFCNi8UJykuHxghUkovEkM7LS/Hx9/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAKREBAAIBAwQABAcAAAAAAAAAAAECEQMSITJBEyIxUXGh0fBCYYGRFP/aAAwDAQACEQMRAD8A+QJ2q+XSkR9Bq9QoK78fE1w0NlBwKBSkE7BIA+vO1S6G8j2P8AwV9D0v4eU0xK38x1uAglkISggdCdrtu4p9q+e2XQ8Q7Jj6u3w+P5a8t/o27v0zU40aR0pBwN/hX0rO8N2y2kOIjNKbcQQoqKVAEA8pIHpWPQvg3T1Wb0l9iQo+8qWlWpC2tSgAEpHuAfvV4+mdcW1y5Xg0x1VbKxVpUAKJ7q+uX/wtUwy6W4kS3kR3VqClEFC0oQhIJAKR0P+9ZPDnwWv3p0mOxaNspOtlQcZKEpUp0pCgUn2/8VbfpT7XN6H1LbyY+gUleO31qYQf8AGtdhS3C0U6vY1rW1WpCkhQG3uPevpL/AIPm3V7vH22nJSm1oT2SpWpC8NkgK5V7VlfEPwiw+HW3y7d2m1uF1v7Z1oFC0pUASs7Efn/2rL9L1u+Odf1fT4cZStYc3Fv3NbfD3iS4iM42h3b1JUAW0/h9f8AearB3iO6S4EofbWnsDtdS6R7AEg/0rO9N9uL0bQnK/J/8Aa47/AMO//wC/5pX0B3w8z2VqLcuMslClJS7i8Srqe232r9Fj9d6O23T6VxfJ70k37a0G1a4J4lU0N0F/L61m718WSIqXFPRuQpZ5AASfnv0rz6N8T2Vtr82I8lC1gNpW2pKlnvj32/vXn7l+b1tX+nKj9G3P5s/81w8vX74q33wI+8uLSlA8wK08v6967i+ImK6gL9m+lSjslbB2r5Vb8b211hL6Y7q2VEpSpKNiqj25+m6V7G66b036V6r036VvT//Z" alt="Logo Alcaldía Carvajal" class="logo-institucional">
+      <div class="logo-institucional"></div>
     </div>
     <h5 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h5>
     <div class="spinner-border spinner-border-sm text-primary mt-2" role="status"></div>
@@ -95,7 +100,7 @@
     <!-- ENCABEZADO DE LA APLICACIÓN CON LOGO -->
     <div class="text-center mb-3">
       <div class="mb-2">
-        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUTExMWFhUXGBUYGBcYGBUYGBoYFRUXFxUVFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIALYBDQMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAAIDBAYHAQj/xAA/EAABAwIEAwUEBgIDAAIDAAABAhEDBCESMUFRBiJhcTKBkbEHM0KhwdHwFCNi8UJykuHxghUkovEkM7LS/Hx9/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAKREBAAIBAwQABAcAAAAAAAAAAAECEQMSITJBEyIxUXGh0fBCYYGRFP/aAAwDAQACEQMRAD8A+QJ2q+XSkR9Bq9QoK78fE1w0NlBwKBSkE7BIA+vO1S6G8j2P8AwV9D0v4eU0xK38x1uAglkISggdCdrtu4p9q+e2XQ8Q7Jj6u3w+P5a8t/o27v0zU40aR0pBwN/hX0rO8N2y2kOIjNKbcQQoqKVAEA8pIHpWPQvg3T1Wb0l9iQo+8qWlWpC2tSgAEpHuAfvV4+mdcW1y5Xg0x1VbKxVpUAKJ7q+uX/wtUwy6W4kS3kR3VqClEFC0oQhIJAKR0P+9ZPDnwWv3p0mOxaNspOtlQcZKEpUp0pCgUn2/8VbfpT7XN6H1LbyY+gUleO31qYQf8AGtdhS3C0U6vY1rW1WpCkhQG3uPevpL/AIPm3V7vH22nJSm1oT2SpWpC8NkgK5V7VlfEPwiw+HW3y7d2m1uF1v7Z1oFC0pUASs7Efn/2rL9L1u+Odf1fT4cZStYc3Fv3NbfD3iS4iM42h3b1JUAW0/h9f8AearB3iO6S4EofbWnsDtdS6R7AEg/0rO9N9uL0bQnK/J/8Aa47/AMO//wC/5pX0B3w8z2VqLcuMslClJS7i8Srqe232r9Fj9d6O23T6VxfJ70k37a0G1a4J4lU0N0F/L61m718WSIqXFPRuQpZ5AASfnv0rz6N8T2Vtr82I8lC1gNpW2pKlnvj32/vXn7l+b1tX+nKj9G3P5s/81w8vX74q33wI+8uLSlA8wK08v6967i+ImK6gL9m+lSjslbB2r5Vb8b211hL6Y7q2VEpSpKNiqj25+m6V7G66b036V6r036VvT//Z" alt="Logo Alcaldía Carvajal" class="logo-institucional">
+        <div class="logo-institucional"></div>
       </div>
       <h4 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h4>
       <p class="text-muted small mb-0">Portal Tributario Municipal • Consulta de Avisos, Recibos, Patentes e Historial de Pagos</p>
@@ -366,7 +371,7 @@
 
     function imprimirReporte() {
       var tipoDoc = document.getElementById('tipoDoc').value;
-      if (!tipoDoc || !usuarioAutenticado) return;
+      if (!tipoDoc || !usuarioAutenticado) renderError...
       
       var urlImpresion = BASE_SCRIPT_URL + "?modo=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
       window.open(urlImpresion, '_blank');
