@@ -207,10 +207,9 @@
 
   </div>
 
-  <!-- JAVASCRIPT BLINDADO PARA GITHUB PAGES -->
+  <!-- JAVASCRIPT CON URL INTEGRADA -->
   <script>
-    // PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT (Ej: "https://script.google.com/macros/s/.../exec")
-    var BASE_SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT_AQUI"; 
+    var BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzFbeujQdkeRa9_NLTRW9FjJBxxYuHE2avOrmsbAjG7Ver3fpSqN7YrkMkM0zsG_4x7w/exec";
 
     var usuarioAutenticado = "";
 
@@ -244,7 +243,6 @@
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verificando...';
       alerta.classList.add('d-none');
 
-      // Petición segura mediante URL parameters para evitar bloqueos CORS
       var urlFinal = BASE_SCRIPT_URL + "?accion=login&usuario=" + encodeURIComponent(u) + "&clave=" + encodeURIComponent(p);
 
       fetch(urlFinal)
