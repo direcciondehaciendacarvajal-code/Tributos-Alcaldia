@@ -81,7 +81,7 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA CON LOGO SEGURO -->
+  <!-- PANTALLA DE CARGA -->
   <div id="splashScreen">
     <div class="mb-2 text-center">
       <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.remove();">
@@ -92,7 +92,7 @@
 
   <div class="container my-3">
     
-    <!-- ENCABEZADO DE LA APLICACIÓN CON LOGO SEGURO -->
+    <!-- ENCABEZADO -->
     <div class="text-center mb-3">
       <div class="mb-2">
         <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.remove();">
@@ -139,7 +139,6 @@
         </div>
       </div>
 
-      <!-- MENSAJE DE BIENVENIDA Y VERIFICACIÓN -->
       <div class="alert alert-primary shadow-sm border-0 mb-3" role="alert">
         <div class="d-flex align-items-center">
           <i class="bi bi-info-circle-fill fs-4 me-3 text-primary"></i>
@@ -208,11 +207,12 @@
 
   </div>
 
-  <!-- JAVASCRIPT DE LA APLICACIÓN -->
+  <!-- JAVASCRIPT BLINDADO PARA GITHUB PAGES -->
   <script>
-    var BASE_SCRIPT_URL = "<?= scriptUrl ?>";
+    // PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT (Ej: "https://script.google.com/macros/s/.../exec")
+    var BASE_SCRIPT_URL = "TU_URL_DE_APPS_SCRIPT_AQUI"; 
+
     var usuarioAutenticado = "";
-    var timerTimeout = null;
 
     window.onload = function() {
       var sesionGuardada = localStorage.getItem('usuario_tributario');
@@ -227,7 +227,7 @@
           splash.style.opacity = '0';
           setTimeout(function() { splash.style.display = 'none'; }, 400);
         }
-      }, 800);
+      }, 600);
     };
 
     function ejecutarLogin(e) {
@@ -244,8 +244,12 @@
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verificando...';
       alerta.classList.add('d-none');
 
-      google.script.run
-        .withSuccessHandler(function(res) {
+      // Petición segura mediante URL parameters para evitar bloqueos CORS
+      var urlFinal = BASE_SCRIPT_URL + "?accion=login&usuario=" + encodeURIComponent(u) + "&clave=" + encodeURIComponent(p);
+
+      fetch(urlFinal)
+        .then(response => response.json())
+        .then(res => {
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
 
@@ -254,17 +258,16 @@
             localStorage.setItem('usuario_tributario', usuarioAutenticado);
             mostrarPantallaConsulta();
           } else {
-            alerta.textContent = res.mensaje;
+            alerta.textContent = res.mensaje || "Datos incorrectos.";
             alerta.classList.remove('d-none');
           }
         })
-        .withFailureHandler(function(err) {
+        .catch(err => {
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
-          alerta.textContent = "Error de conexión: " + (err.message || err);
+          alerta.textContent = "Error de conexión con el servidor municipal.";
           alerta.classList.remove('d-none');
-        })
-        .validarLogin(u, p);
+        });
     }
 
     function mostrarPantallaConsulta() {
@@ -295,27 +298,25 @@
       document.getElementById('alertaError').classList.add('d-none');
       document.getElementById('btnBuscar').disabled = true;
       
-      clearTimeout(timerTimeout);
-      timerTimeout = setTimeout(function() {
-        mostrarErrorGlobal("Tiempo de respuesta agotado. Por favor, intente nuevamente.");
-      }, 25000);
+      var urlFinal = BASE_SCRIPT_URL + "?accion=consultar&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
 
-      google.script.run
-        .withSuccessHandler(function(res) {
-          clearTimeout(timerTimeout);
+      fetch(urlFinal)
+        .then(response => response.json())
+        .then(res => {
+          document.getElementById('cargando').classList.add('d-none');
+          document.getElementById('btnBuscar').disabled = false;
           mostrarResultados(res);
         })
-        .withFailureHandler(function(err) {
-          clearTimeout(timerTimeout);
-          mostrarErrorGlobal(err);
-        })
-        .obtenerTodosRegistros(tipoDoc, usuarioAutenticado);
+        .catch(err => {
+          document.getElementById('cargando').classList.add('d-none');
+          document.getElementById('btnBuscar').disabled = false;
+          var elError = document.getElementById('alertaError');
+          elError.textContent = "Error al consultar los registros del servidor.";
+          elError.classList.remove('d-none');
+        });
     }
 
     function mostrarResultados(res) {
-      document.getElementById('cargando').classList.add('d-none');
-      document.getElementById('btnBuscar').disabled = false;
-      
       if (!res.exito) {
         var elError = document.getElementById('alertaError');
         elError.textContent = res.mensaje;
@@ -356,19 +357,11 @@
       document.getElementById('contenedorResultados').classList.remove('d-none');
     }
 
-    function mostrarErrorGlobal(err) {
-      document.getElementById('caddando').classList.add('d-none');
-      document.getElementById('btnBuscar').disabled = false;
-      var elError = document.getElementById('alertaError');
-      elError.textContent = "Error en la consulta: " + (err.message || err);
-      elError.classList.remove('d-none');
-    }
-
     function imprimirReporte() {
       var tipoDoc = document.getElementById('tipoDoc').value;
       if (!tipoDoc || !usuarioAutenticado) return;
       
-      var urlImpresion = BASE_SCRIPT_URL + "?modo=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
+      var urlImpresion = BASE_SCRIPT_URL + "?accion=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
       window.open(urlImpresion, '_blank');
     }
   </script>
