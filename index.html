@@ -81,10 +81,10 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA CON LOGO -->
+  <!-- PANTALLA DE CARGA CON LOGO SEGURO -->
   <div id="splashScreen">
     <div class="mb-2 text-center">
-      <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.style.display='none'">
+      <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.remove();">
     </div>
     <h5 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h5>
     <div class="spinner-border spinner-border-sm text-primary mt-2" role="status"></div>
@@ -92,10 +92,10 @@
 
   <div class="container my-3">
     
-    <!-- ENCABEZADO DE LA APLICACIÓN CON LOGO -->
+    <!-- ENCABEZADO DE LA APLICACIÓN CON LOGO SEGURO -->
     <div class="text-center mb-3">
       <div class="mb-2">
-        <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.style.display='none'">
+        <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.remove();">
       </div>
       <h4 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h4>
       <p class="text-muted small mb-0">Portal Tributario Municipal • Consulta de Avisos, Recibos, Patentes e Historial de Pagos</p>
@@ -357,7 +357,7 @@
     }
 
     function mostrarErrorGlobal(err) {
-      document.getElementById('cargando').classList.add('d-none');
+      document.getElementById('caddando').classList.add('d-none');
       document.getElementById('btnBuscar').disabled = false;
       var elError = document.getElementById('alertaError');
       elError.textContent = "Error en la consulta: " + (err.message || err);
