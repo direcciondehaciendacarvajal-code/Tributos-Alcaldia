@@ -239,7 +239,6 @@
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verificando...';
       document.getElementById('alertaLogin').classList.add('d-none');
 
-      // Nombre de función callback única global para JSONP
       var callbackName = 'callbackLogin_' + Date.now();
       window[callbackName] = function(res) {
         delete window[callbackName];
