@@ -207,7 +207,7 @@
 
   </div>
 
-  <!-- JAVASCRIPT ROBUSTO CON JSONP -->
+  <!-- JAVASCRIPT DIRECTO Y SEGURO -->
   <script>
     var BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzFbeujQdkeRa9_NLTRW9FjJBxxYuHE2avOrmsbAjG7Ver3fpSqN7YrkMkM0zsG_4x7w/exec";
     var usuarioAutenticado = "";
@@ -239,39 +239,31 @@
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verificando...';
       document.getElementById('alertaLogin').classList.add('d-none');
 
-      var callbackName = 'callbackLogin_' + Date.now();
-      window[callbackName] = function(res) {
-        delete window[callbackName];
-        var scriptTag = document.getElementById(callbackName);
-        if (scriptTag) scriptTag.remove();
+      var url = BASE_SCRIPT_URL + "?accion=login&usuario=" + encodeURIComponent(user) + "&clave=" + encodeURIComponent(clave);
 
-        btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
+      fetch(url)
+        .then(response => response.json())
+        .then(res => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
 
-        if (res && res.exito) {
-          usuarioAutenticado = res.usuario;
-          localStorage.setItem('usuario_tributario', usuarioAutenticado);
-          mostrarPantallaConsulta();
-        } else {
+          if (res && res.exito) {
+            usuarioAutenticado = res.usuario;
+            localStorage.setItem('usuario_tributario', usuarioAutenticado);
+            mostrarPantallaConsulta();
+          } else {
+            var alerta = document.getElementById('alertaLogin');
+            alerta.textContent = (res && res.mensaje) ? res.mensaje : "Datos incorrectos.";
+            alerta.classList.remove('d-none');
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
           var alerta = document.getElementById('alertaLogin');
-          alerta.textContent = (res && res.mensaje) ? res.mensaje : "Datos incorrectos.";
+          alerta.textContent = "Error de conexión con el servidor.";
           alerta.classList.remove('d-none');
-        }
-      };
-
-      var script = document.createElement('script');
-      script.id = callbackName;
-      script.src = BASE_SCRIPT_URL + "?accion=login&usuario=" + encodeURIComponent(user) + "&clave=" + encodeURIComponent(clave) + "&callback=" + callbackName;
-      script.onerror = function() {
-        delete window[callbackName];
-        script.remove();
-        btn.disabled = false;
-        btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
-        var alerta = document.getElementById('alertaLogin');
-        alerta.textContent = "Error de conexión con el servidor.";
-        alerta.classList.remove('d-none');
-      };
-      document.body.appendChild(script);
+        });
     }
 
     function mostrarPantallaConsulta() {
@@ -301,30 +293,22 @@
       document.getElementById('alertaError').classList.add('d-none');
       document.getElementById('btnBuscar').disabled = true;
       
-      var callbackName = 'callbackConsulta_' + Date.now();
-      window[callbackName] = function(res) {
-        delete window[callbackName];
-        var scriptTag = document.getElementById(callbackName);
-        if (scriptTag) scriptTag.remove();
+      var url = BASE_SCRIPT_URL + "?accion=consultar&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
 
-        document.getElementById('cargando').classList.add('d-none');
-        document.getElementById('btnBuscar').disabled = false;
-        mostrarResultados(res);
-      };
-
-      var script = document.createElement('script');
-      script.id = callbackName;
-      script.src = BASE_SCRIPT_URL + "?accion=consultar&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado) + "&callback=" + callbackName;
-      script.onerror = function() {
-        delete window[callbackName];
-        script.remove();
-        document.getElementById('cargando').classList.add('d-none');
-        document.getElementById('btnBuscar').disabled = false;
-        var elError = document.getElementById('alertaError');
-        elError.textContent = "Error al consultar los registros del servidor.";
-        elError.classList.remove('d-none');
-      };
-      document.body.appendChild(script);
+      fetch(url)
+        .then(response => response.json())
+        .then(res => {
+          document.getElementById('cargando').classList.add('d-none');
+          document.getElementById('btnBuscar').disabled = false;
+          mostrarResultados(res);
+        })
+        .catch(err => {
+          document.getElementById('cargando').classList.add('d-none');
+          document.getElementById('btnBuscar').disabled = false;
+          var elError = document.getElementById('alertaError');
+          elError.textContent = "Error al consultar los registros del servidor.";
+          elError.classList.remove('d-none');
+        });
     }
 
     function mostrarResultados(res) {
