@@ -3,14 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Alcaldía de Carvajal - Anzoátegui</title>
+  <title>Portal Tributario Municipal</title>
   
+  <!-- Configuración de color para el navegador móvil -->
   <meta name="theme-color" content="#0d6efd">
+
+  <!-- Modo Aplicación Web para Pantalla Completa (PWA) -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Portal Tributario">
 
+  <!-- Iconos utilizando la URL pública de GitHub Pages -->
+  <link rel="icon" type="image/png" href="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png">
+  <link rel="apple-touch-icon" href="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png">
+
+  <!-- CDN Bootstrap e Iconos -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   
@@ -25,6 +33,7 @@
       padding-bottom: 40px;
     }
 
+    /* SPLASH SCREEN DE CARGA */
     #splashScreen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -36,13 +45,22 @@
       z-index: 10000;
       transition: opacity 0.4s ease, visibility 0.4s;
     }
-
-    .logo-institucional {
-      max-height: 90px;
-      width: auto;
-      object-fit: contain;
+    #splashScreen img {
+      width: 130px;
+      height: auto;
+      margin-bottom: 15px;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
+    .header-logo {
+      max-width: 110px;
+      height: auto;
+    }
     .card-custom {
       border: none;
       border-radius: 12px;
@@ -81,24 +99,20 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA -->
+  <!-- PANTALLA DE BIENVENIDA MÓVIL (SPLASH SCREEN) -->
   <div id="splashScreen">
-    <div class="mb-2 text-center">
-      <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.remove();">
-    </div>
-    <h5 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h5>
+    <img src="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png" alt="Logo Municipal">
+    <h6 class="fw-bold text-primary mb-1">Portal Tributario Municipal</h6>
     <div class="spinner-border spinner-border-sm text-primary mt-2" role="status"></div>
   </div>
 
   <div class="container my-3">
     
-    <!-- ENCABEZADO -->
+    <!-- ENCABEZADO DE LA APLICACIÓN -->
     <div class="text-center mb-3">
-      <div class="mb-2">
-        <img src="logo.jpg" alt="Logo Alcaldía" class="logo-institucional" onerror="this.remove();">
-      </div>
-      <h4 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h4>
-      <p class="text-muted small mb-0">Portal Tributario Municipal • Consulta de Avisos, Recibos, Patentes e Historial de Pagos</p>
+      <img src="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png" alt="Logo Municipal" class="header-logo mb-2">
+      <h4 class="fw-bold text-primary mb-1">Portal Tributario Municipal</h4>
+      <p class="text-muted small mb-0">Consulta de Avisos, Recibos, Patentes e Historial de Pagos</p>
     </div>
 
     <!-- SECCIÓN DE LOGIN -->
@@ -136,18 +150,6 @@
           <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">
             <i class="bi bi-power me-1"></i> Salir
           </button>
-        </div>
-      </div>
-
-      <div class="alert alert-primary shadow-sm border-0 mb-3" role="alert">
-        <div class="d-flex align-items-center">
-          <i class="bi bi-info-circle-fill fs-4 me-3 text-primary"></i>
-          <div>
-            <h6 class="fw-bold mb-1">¡Bienvenido al Portal Tributario!</h6>
-            <p class="mb-0 small text-secondary">
-              Estimado contribuyente, le invitamos a hacer uso de este sistema para verificar de manera detallada todos sus movimientos, avisos de cobro, recibos, patentes e historial de pagos.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -207,10 +209,11 @@
 
   </div>
 
-  <!-- JAVASCRIPT DIRECTO Y SEGURO -->
+  <!-- JAVASCRIPT DE LA APLICACIÓN -->
   <script>
-    var BASE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzFbeujQdkeRa9_NLTRW9FjJBxxYuHE2avOrmsbAjG7Ver3fpSqN7YrkMkM0zsG_4x7w/exec";
+    var BASE_SCRIPT_URL = "<?= scriptUrl ?>";
     var usuarioAutenticado = "";
+    var timerTimeout = null;
 
     window.onload = function() {
       var sesionGuardada = localStorage.getItem('usuario_tributario');
@@ -225,45 +228,44 @@
           splash.style.opacity = '0';
           setTimeout(function() { splash.style.display = 'none'; }, 400);
         }
-      }, 600);
+      }, 800);
     };
 
     function ejecutarLogin(e) {
       e.preventDefault();
-      var user = document.getElementById('loginUser').value.trim();
-      var clave = document.getElementById('loginClave').value.trim();
-      if (!user || !clave) return;
-
+      
+      var u = document.getElementById('loginUser').value.trim();
+      var p = document.getElementById('loginClave').value.trim();
       var btn = document.getElementById('btnIngresar');
+      var alerta = document.getElementById('alertaLogin');
+
+      if (!u || !p) return;
+
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verificando...';
-      document.getElementById('alertaLogin').classList.add('d-none');
+      alerta.classList.add('d-none');
 
-      var url = BASE_SCRIPT_URL + "?accion=login&usuario=" + encodeURIComponent(user) + "&clave=" + encodeURIComponent(clave);
-
-      fetch(url)
-        .then(response => response.json())
-        .then(res => {
+      google.script.run
+        .withSuccessHandler(function(res) {
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
 
-          if (res && res.exito) {
+          if (res.exito) {
             usuarioAutenticado = res.usuario;
             localStorage.setItem('usuario_tributario', usuarioAutenticado);
             mostrarPantallaConsulta();
           } else {
-            var alerta = document.getElementById('alertaLogin');
-            alerta.textContent = (res && res.mensaje) ? res.mensaje : "Datos incorrectos.";
+            alerta.textContent = res.mensaje;
             alerta.classList.remove('d-none');
           }
         })
-        .catch(err => {
+        .withFailureHandler(function(err) {
           btn.disabled = false;
           btn.innerHTML = '<i class="bi bi-box-arrow-in-right me-1"></i> Entrar al Sistema';
-          var alerta = document.getElementById('alertaLogin');
-          alerta.textContent = "Error de conexión con el servidor.";
+          alerta.textContent = "Error de conexión: " + (err.message || err);
           alerta.classList.remove('d-none');
-        });
+        })
+        .validarLogin(u, p);
     }
 
     function mostrarPantallaConsulta() {
@@ -285,6 +287,7 @@
 
     function realizarConsulta(e) {
       e.preventDefault();
+      
       var tipoDoc = document.getElementById('tipoDoc').value;
       if (!tipoDoc || !usuarioAutenticado) return;
       
@@ -293,28 +296,30 @@
       document.getElementById('alertaError').classList.add('d-none');
       document.getElementById('btnBuscar').disabled = true;
       
-      var url = BASE_SCRIPT_URL + "?accion=consultar&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
+      clearTimeout(timerTimeout);
+      timerTimeout = setTimeout(function() {
+        mostrarErrorGlobal("Tiempo de respuesta agotado. Por favor, intente nuevamente.");
+      }, 25000);
 
-      fetch(url)
-        .then(response => response.json())
-        .then(res => {
-          document.getElementById('cargando').classList.add('d-none');
-          document.getElementById('btnBuscar').disabled = false;
+      google.script.run
+        .withSuccessHandler(function(res) {
+          clearTimeout(timerTimeout);
           mostrarResultados(res);
         })
-        .catch(err => {
-          document.getElementById('cargando').classList.add('d-none');
-          document.getElementById('btnBuscar').disabled = false;
-          var elError = document.getElementById('alertaError');
-          elError.textContent = "Error al consultar los registros del servidor.";
-          elError.classList.remove('d-none');
-        });
+        .withFailureHandler(function(err) {
+          clearTimeout(timerTimeout);
+          mostrarErrorGlobal(err);
+        })
+        .obtenerTodosRegistros(tipoDoc, usuarioAutenticado);
     }
 
     function mostrarResultados(res) {
-      if (!res || !res.exito) {
+      document.getElementById('cargando').classList.add('d-none');
+      document.getElementById('btnBuscar').disabled = false;
+      
+      if (!res.exito) {
         var elError = document.getElementById('alertaError');
-        elError.textContent = (res && res.mensaje) ? res.mensaje : "Error al obtener los datos.";
+        elError.textContent = res.mensaje;
         elError.classList.remove('d-none');
         return;
       }
@@ -352,11 +357,19 @@
       document.getElementById('contenedorResultados').classList.remove('d-none');
     }
 
+    function mostrarErrorGlobal(err) {
+      document.getElementById('cargando').classList.add('d-none');
+      document.getElementById('btnBuscar').disabled = false;
+      var elError = document.getElementById('alertaError');
+      elError.textContent = (typeof err === 'object') ? err.message : err;
+      elError.classList.remove('d-none');
+    }
+
     function imprimirReporte() {
       var tipoDoc = document.getElementById('tipoDoc').value;
       if (!tipoDoc || !usuarioAutenticado) return;
-      var urlImpresion = BASE_SCRIPT_URL + "?modo=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
-      window.open(urlImpresion, '_blank');
+      var url = BASE_SCRIPT_URL + '?modo=imprimir&tipo=' + encodeURIComponent(tipoDoc) + '&usuario=' + encodeURIComponent(usuarioAutenticado);
+      window.open(url, '_blank');
     }
   </script>
 </body>
