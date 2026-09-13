@@ -3,22 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Portal Tributario Municipal</title>
+  <title>Alcaldía de Carvajal - Anzoátegui</title>
   
-  <!-- Configuración de color para el navegador móvil -->
   <meta name="theme-color" content="#0d6efd">
-
-  <!-- Modo Aplicación Web para Pantalla Completa (PWA) -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Portal Tributario">
 
-  <!-- Iconos utilizando la URL pública de GitHub Pages -->
-  <link rel="icon" type="image/png" href="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png">
-  <link rel="apple-touch-icon" href="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png">
-
-  <!-- CDN Bootstrap e Iconos -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   
@@ -33,7 +25,6 @@
       padding-bottom: 40px;
     }
 
-    /* SPLASH SCREEN DE CARGA */
     #splashScreen {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -45,22 +36,18 @@
       z-index: 10000;
       transition: opacity 0.4s ease, visibility 0.4s;
     }
-    #splashScreen img {
-      width: 130px;
-      height: auto;
-      margin-bottom: 15px;
-      animation: pulse 1.8s infinite ease-in-out;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+
+    /* CONTENEDOR DE LOGO POR CSS */
+    .logo-institucional {
+      width: 120px;
+      height: 90px;
+      background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxITEhUTExMWFhUXGBUYGBcYGBUYGBoYFRUXFxUVFRUYHSggGBolGxUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0OGxAQGy0lICUtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIALYBDQMBIgACEQEDEQH/xAAcAAABBQEBAQAAAAAAAAAAAAAFAAIDBAYHAQj/xAA/EAABAwIEAwUEBgIDAAIDAAABAhEDBCESMUFRBiJhcTKBkbEHM0KhwdHwFCNi8UJykuHxghUkovEkM7LS/Hx9/8QAGQEAAwEBAQAAAAAAAAAAAAAAAAECAwQF/8QAKREBAAIBAwQABAcAAAAAAAAAAAECEQMSITJBEyIxUXGh0fBCYYGRFP/aAAwDAQACEQMRAD8A+QJ2q+XSkR9Bq9QoK78fE1w0NlBwKBSkE7BIA+vO1S6G8j2P8AwV9D0v4eU0xK38x1uAglkISggdCdrtu4p9q+e2XQ8Q7Jj6u3w+P5a8t/o27v0zU40aR0pBwN/hX0rO8N2y2kOIjNKbcQQoqKVAEA8pIHpWPQvg3T1Wb0l9iQo+8qWlWpC2tSgAEpHuAfvV4+mdcW1y5Xg0x1VbKxVpUAKJ7q+uX/wtUwy6W4kS3kR3VqClEFC0oQhIJAKR0P+9ZPDnwWv3p0mOxaNspOtlQcZKEpUp0pCgUn2/8VbfpT7XN6H1LbyY+gUleO31qYQf8AGtdhS3C0U6vY1rW1WpCkhQG3uPevpL/AIPm3V7vH22nJSm1oT2SpWpC8NkgK5V7VlfEPwiw+HW3y7d2m1uF1v7Z1oFC0pUASs7Efn/2rL9L1u+Odf1fT4cZStYc3Fv3NbfD3iS4iM42h3b1JUAW0/h9f8ARearB3iO6S4EofbWnsDtdS6R7AEg/0rO9N9uL0bQnK/J/8Aa47/AMO//wC/5pX0B3w8z2VqLcuMslClJS7i8Srqe232r9Fj9d6O23T6VxfJ70k37a0G1a4J4lU0N0F/L61m718WSIqXFPRuQpZ5AASfnv0rz6N8T2Vtr82I8lC1gNpW2pKlnvj32/vXn7l+b1tX+nKj9G3P5s/81w8vX74q33wI+8uLSlA8wK08v6967i+ImK6gL9m+lSjslbB2r5Vb8b211hL6Y7q2VEpSpKNiqj25+m6V7G66b036V6r036VvT//Z');
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0 auto;
     }
 
-    .header-logo {
-      max-width: 110px;
-      height: auto;
-    }
     .card-custom {
       border: none;
       border-radius: 12px;
@@ -99,20 +86,24 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE BIENVENIDA MÓVIL (SPLASH SCREEN) -->
+  <!-- PANTALLA DE CARGA CON LOGO -->
   <div id="splashScreen">
-    <img src="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png" alt="Logo Municipal">
-    <h6 class="fw-bold text-primary mb-1">Portal Tributario Municipal</h6>
+    <div class="mb-2 text-center">
+      <div class="logo-institucional"></div>
+    </div>
+    <h5 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h5>
     <div class="spinner-border spinner-border-sm text-primary mt-2" role="status"></div>
   </div>
 
   <div class="container my-3">
     
-    <!-- ENCABEZADO DE LA APLICACIÓN -->
+    <!-- ENCABEZADO DE LA APLICACIÓN CON LOGO -->
     <div class="text-center mb-3">
-      <img src="https://direcciondehaciendacarvajal-code.github.io/portal-tributario/logo.png" alt="Logo Municipal" class="header-logo mb-2">
-      <h4 class="fw-bold text-primary mb-1">Portal Tributario Municipal</h4>
-      <p class="text-muted small mb-0">Consulta de Avisos, Recibos, Patentes e Historial de Pagos</p>
+      <div class="mb-2">
+        <div class="logo-institucional"></div>
+      </div>
+      <h4 class="fw-bold text-primary mb-1">Alcaldía de Carvajal - Anzoátegui</h4>
+      <p class="text-muted small mb-0">Portal Tributario Municipal • Consulta de Avisos, Recibos, Patentes e Historial de Pagos</p>
     </div>
 
     <!-- SECCIÓN DE LOGIN -->
@@ -150,6 +141,19 @@
           <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">
             <i class="bi bi-power me-1"></i> Salir
           </button>
+        </div>
+      </div>
+
+      <!-- MENSAJE DE BIENVENIDA Y VERIFICACIÓN -->
+      <div class="alert alert-primary shadow-sm border-0 mb-3" role="alert">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-info-circle-fill fs-4 me-3 text-primary"></i>
+          <div>
+            <h6 class="fw-bold mb-1">¡Bienvenido al Portal Tributario!</h6>
+            <p class="mb-0 small text-secondary">
+              Estimado contribuyente, le invitamos a hacer uso de este sistema para verificar de manera detallada todos sus movimientos, avisos de cobro, recibos, patentes e historial de pagos.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -361,15 +365,16 @@
       document.getElementById('cargando').classList.add('d-none');
       document.getElementById('btnBuscar').disabled = false;
       var elError = document.getElementById('alertaError');
-      elError.textContent = (typeof err === 'object') ? err.message : err;
+      elError.textContent = "Error en la consulta: " + (err.message || err);
       elError.classList.remove('d-none');
     }
 
     function imprimirReporte() {
       var tipoDoc = document.getElementById('tipoDoc').value;
       if (!tipoDoc || !usuarioAutenticado) return;
-      var url = BASE_SCRIPT_URL + '?modo=imprimir&tipo=' + encodeURIComponent(tipoDoc) + '&usuario=' + encodeURIComponent(usuarioAutenticado);
-      window.open(url, '_blank');
+      
+      var urlImpresion = BASE_SCRIPT_URL + "?modo=imprimir&tipo=" + encodeURIComponent(tipoDoc) + "&usuario=" + encodeURIComponent(usuarioAutenticado);
+      window.open(urlImpresion, '_blank');
     }
   </script>
 </body>
